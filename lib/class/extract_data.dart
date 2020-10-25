@@ -2,8 +2,10 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
-class ImageLabels {
+class ExtractData {
   final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
+  File fileImage;
+  bool run = false;
 
   openImage() async {
     String response = await getImageFile();
@@ -12,6 +14,7 @@ class ImageLabels {
 
   getImageFile() async {
     File file = await FilePicker.getFile();
+    fileImage = file;
     String text;
 
     try {
@@ -19,11 +22,11 @@ class ImageLabels {
       VisionText visionText = await textRecognizer.processImage(visionImage);
 
       text = visionText.text;
-    } catch(e) {
+      run = true;
+    } catch (e) {
       text = 'Sem foto selecionada';
     }
 
     return text;
   }
-
 }
